@@ -1,0 +1,40 @@
+[package]
+name = "lsimons-$project"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.85"
+description = "$shortDescription"
+authors = ["lsimons"]
+license-file = "LICENSE.md"
+readme = "README.md"
+
+[lib]
+# Library code lives in src/lib.rs. The binary target below depends on it.
+name = "lsimons_$project"
+path = "src/lib.rs"
+
+[[bin]]
+name = "lsimons-$project"
+path = "src/main.rs"
+
+[dependencies]
+clap = { version = "4.6", features = ["derive"] }
+
+[dev-dependencies]
+assert_cmd = "2"
+predicates = "3"
+
+[lints.rust]
+unsafe_code = "forbid"
+missing_debug_implementations = "warn"
+
+[lints.clippy]
+# Start strict; relax on a case-by-case basis if a lint fires on correct code.
+all = { level = "warn", priority = -1 }
+pedantic = { level = "warn", priority = -1 }
+# `restriction` is not enabled as a group on purpose (contains contradictory lints).
+
+[profile.release]
+lto = "thin"
+codegen-units = 1
+strip = "symbols"

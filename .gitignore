@@ -1,0 +1,34 @@
+# Rust
+/target/
+**/*.rs.bk
+Cargo.lock.bak
+
+# Coverage
+/coverage/
+*.profraw
+*.profdata
+tarpaulin-report.html
+cobertura.xml
+lcov.info
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# IDEs and editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+rls/
+
+# Operating systems
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db

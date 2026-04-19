@@ -17,7 +17,6 @@ testable in isolation and reusable by other consumers.
 
 3. Update `Cargo.toml`:
    - Change `name`, `description`, and the `[lib]`/`[[bin]]` names
-   - Bump `rust-version` if you rely on newer stable features
 
 4. Replace `src/lib.rs` and `src/main.rs` with real code. The template will
    not build until the `$project` placeholders are substituted — that is
@@ -28,7 +27,7 @@ testable in isolation and reusable by other consumers.
 
 ## Included Configuration
 
-- **Rust edition 2024** with `rust-version = "1.85"` as MSRV
+- **Rust edition 2024**, tracks latest stable Rust (no MSRV pin)
 - **Single crate, dual target**: `src/lib.rs` holds the library, `src/main.rs`
   is the CLI binary that calls into it. `cargo test` exercises both.
 - **clap 4 (derive)** for CLI argument parsing
@@ -60,7 +59,6 @@ lsimons-$project/
 ├── AGENTS.md                 # AI agent instructions
 ├── CLAUDE.md -> AGENTS.md    # Claude Code compatibility
 ├── Cargo.toml                # Package manifest
-├── clippy.toml               # Clippy MSRV config
 ├── rustfmt.toml              # Formatter config
 └── README.md
 ```

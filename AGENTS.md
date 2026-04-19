@@ -24,7 +24,8 @@ Brief project description.
 ## Guidelines
 
 **Code quality:**
-- Edition 2024; MSRV tracked via `rust-version` in `Cargo.toml`
+- Edition 2024; tracks latest stable Rust (`rust = "latest"` in
+  `.mise.toml`), no MSRV pin
 - `cargo clippy -- -D warnings` must be clean (warn on `all` + `pedantic`)
 - Code must be `cargo fmt`-clean
 - No `unsafe` by default (`unsafe_code = "forbid"` in `Cargo.toml`)

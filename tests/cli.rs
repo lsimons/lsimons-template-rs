@@ -1,6 +1,6 @@
 //! End-to-end tests that spawn the compiled binary.
 //!
-//! Cargo makes `CARGO_BIN_EXE_lsimons-$project` available to integration tests;
+//! Cargo makes `CARGO_BIN_EXE_lsimons-template` available to integration tests;
 //! `assert_cmd` uses it under the hood via `Command::cargo_bin`.
 
 use assert_cmd::Command;
@@ -8,7 +8,7 @@ use predicates::str::contains;
 
 #[test]
 fn greets_named_arg() {
-    Command::cargo_bin("lsimons-$project")
+    Command::cargo_bin("lsimons-template")
         .unwrap()
         .arg("Rust")
         .assert()
@@ -18,7 +18,7 @@ fn greets_named_arg() {
 
 #[test]
 fn greets_default() {
-    Command::cargo_bin("lsimons-$project")
+    Command::cargo_bin("lsimons-template")
         .unwrap()
         .assert()
         .success()
@@ -27,7 +27,7 @@ fn greets_default() {
 
 #[test]
 fn rejects_empty_name() {
-    Command::cargo_bin("lsimons-$project")
+    Command::cargo_bin("lsimons-template")
         .unwrap()
         .arg("")
         .assert()

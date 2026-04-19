@@ -7,23 +7,24 @@ testable in isolation and reusable by other consumers.
 
 ## Using This Template
 
-1. Copy this repository to create a new project
-2. Replace placeholders throughout:
-   - `$project` - project name hyphenated (e.g., `myproject`)
-   - `$project` in `lsimons_$project` imports — Rust converts hyphens to
-     underscores automatically for the library crate name (declared in
-     `Cargo.toml`), so `lsimons-foo` becomes `lsimons_foo` in code
-   - `$shortDescription` - one-line description
+1. Click **Use this template** on GitHub (or clone this repo).
+2. Clone your new repo locally and run:
 
-3. Update `Cargo.toml`:
-   - Change `name`, `description`, and the `[lib]`/`[[bin]]` names
+   ```bash
+   mise install          # pin + install rust toolchain
+   mise run init         # rename `template` → your project name
+   mise run build        # confirm it compiles
+   ```
 
-4. Replace `src/lib.rs` and `src/main.rs` with real code. The template will
-   not build until the `$project` placeholders are substituted — that is
-   intentional.
+   `mise run init` auto-detects your project name from the git remote
+   (or directory name), stripping `lsimons-` / `-rs` suffixes. Pass
+   `--name foo` to override. Rust converts hyphens to underscores for
+   the library crate name (`lsimons-foo` becomes `lsimons_foo` in
+   `use` statements); init handles both forms. See `scripts/init.py`.
 
-5. Update `AGENTS.md` (and `CLAUDE.md` symlink) with project-specific
+3. Update `AGENTS.md` (and `CLAUDE.md` symlink) with project-specific
    instructions.
+4. Replace `src/lib.rs` and `src/main.rs` with real code.
 
 ## Included Configuration
 
@@ -40,17 +41,16 @@ testable in isolation and reusable by other consumers.
 - **GitHub Actions CI** on push/PR to main, with actions pinned to
   full-length commit SHAs (the repo setting *Require actions to be
   pinned to a full-length commit SHA* is enabled)
-
-> **Note:** CI is red on this template repo itself — the `$project`
-> placeholder in `Cargo.toml` makes the package name malformed on purpose.
-> Once you fork and do the search/replace described above, CI turns green.
+- **`.mise.toml`** pins toolchain + defines every repo task
 
 ## Project Structure
 
 ```
-lsimons-$project/
-├── .github/workflows/ci.yml  # CI pipeline
+lsimons-template-rs/
+├── .github/workflows/ci.yml  # CI pipeline (mise-action)
+├── .mise.toml                # Toolchain pin + task runner
 ├── docs/spec/                # Feature specifications
+├── scripts/init.py           # Rename-to-your-project helper
 ├── src/
 │   ├── lib.rs                # Library code (testable core)
 │   └── main.rs               # CLI binary, thin wrapper over the lib
@@ -66,24 +66,13 @@ lsimons-$project/
 ## Development Commands
 
 ```bash
-# Build
-cargo build --all-targets
-
-# Run the CLI
-cargo run -- <args>
-
-# Test (library unit tests + integration tests)
-cargo test --all-targets
-
-# Lint (strict: all + pedantic, warnings denied)
-cargo clippy --all-targets --all-features -- -D warnings
-
-# Format
-cargo fmt            # apply
-cargo fmt --check    # verify (used in CI)
-
-# Docs (warnings denied)
-RUSTDOCFLAGS="-D warnings" cargo doc --no-deps --all-features
+mise install          # one-time: pin + install toolchain
+mise run build        # cargo build --all-targets --locked
+mise run test         # cargo test --all-targets --locked
+mise run lint         # cargo fmt --check + clippy -D warnings
+mise run format       # cargo fmt
+mise run doc          # cargo doc --no-deps --all-features
+mise run ci           # full CI gate
 ```
 
 ## When to Promote to a Workspace

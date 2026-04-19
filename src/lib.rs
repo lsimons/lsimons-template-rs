@@ -1,4 +1,4 @@
-//! Library crate for `lsimons-$project`.
+//! Library crate for `lsimons-template`.
 //!
 //! Put core logic here so it can be unit-tested in isolation and reused by the
 //! binary entrypoint in `src/main.rs` as well as any future consumers.

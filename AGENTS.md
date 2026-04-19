@@ -1,6 +1,10 @@
-# Agent Instructions for lsimons-$project
+# Agent Instructions for lsimons-template-rs
 
 > This file (`AGENTS.md`) is the canonical agent configuration. `CLAUDE.md` is a symlink to this file.
+
+> **If this repo still says "template" everywhere:** run
+> `mise run init` once to rename the placeholder crate to your
+> project name. See `scripts/init.py` for details.
 
 Brief project description.
 

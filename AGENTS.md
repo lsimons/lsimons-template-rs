@@ -6,13 +6,14 @@ Brief project description.
 
 ## Quick Reference
 
-- **Build**: `cargo build --all-targets`
+- **One-time**: `mise install`
+- **Build**: `mise run build` (or `cargo build --all-targets`)
 - **Run CLI**: `cargo run -- <args>`
-- **Test**: `cargo test --all-targets`
-- **Lint**: `cargo clippy --all-targets --all-features -- -D warnings`
-- **Format**: `cargo fmt`
-- **Format check**: `cargo fmt --check`
-- **Doc check**: `cargo doc --no-deps --all-features`
+- **Test**: `mise run test` (or `cargo test --all-targets`)
+- **Lint**: `mise run lint` (fmt check + clippy -D warnings)
+- **Format**: `mise run format` (or `cargo fmt`)
+- **Doc check**: `mise run doc`
+- **Full CI gate**: `mise run ci`
 
 ## Structure
 
@@ -44,9 +45,7 @@ Work is NOT complete until `git push` succeeds.
 
 1. **Quality gates** (if code changed):
    ```bash
-   cargo fmt --check
-   cargo clippy --all-targets --all-features -- -D warnings
-   cargo test --all-targets
+   mise run ci
    ```
 
 2. **Push**:

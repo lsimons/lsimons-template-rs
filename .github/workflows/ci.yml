@@ -22,28 +22,26 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
 
-      - name: Install Rust toolchain (stable)
-        uses: dtolnay/rust-toolchain@b3b07ba8b418998c39fb20f53e8b695cdcc8de1b # stable (pinned)
+      - name: Set up mise
+        uses: jdx/mise-action@1648a7812b9aeae629881980618f079932869151 # v4.0.1
         with:
-          toolchain: stable
-          components: rustfmt, clippy
+          install: true
+          cache: true
+
+      - name: Install Rust components
+        run: rustup component add rustfmt clippy
 
       - name: Cache cargo registry and target
-        uses: Swatinem/rust-cache@f13886b937689c021905066e5e2106a34ca2ef3e # v2
+        uses: Swatinem/rust-cache@c19371144df3bb44fab255c43d04cbc2ab54d1c4 # v2.9.1
 
-      - name: Format check
-        run: cargo fmt --all --check
-
-      - name: Clippy
-        run: cargo clippy --all-targets --all-features -- -D warnings
+      - name: Lint (fmt + clippy)
+        run: mise run lint
 
       - name: Build
-        run: cargo build --all-targets --locked
+        run: mise run build
 
       - name: Test
-        run: cargo test --all-targets --locked
+        run: mise run test
 
       - name: Doc build
-        run: cargo doc --no-deps --all-features
-        env:
-          RUSTDOCFLAGS: -D warnings
+        run: mise run doc

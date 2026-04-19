@@ -1,0 +1,41 @@
+# mise: https://mise.jdx.dev/
+#
+# `mise install` installs the Rust toolchain; `mise run <task>` wraps
+# cargo commands. Cargo.toml's `rust-version` remains the MSRV
+# authority.
+
+[tools]
+rust = "latest"
+
+[env]
+CARGO_TERM_COLOR = "always"
+RUSTFLAGS = "-D warnings"
+_.file = { path = ".env", optional = true }
+
+[tasks.lint]
+description = "cargo fmt --check + clippy -D warnings"
+run = [
+    "cargo fmt --all --check",
+    "cargo clippy --all-targets --all-features -- -D warnings",
+]
+
+[tasks.format]
+description = "cargo fmt"
+run = "cargo fmt --all"
+
+[tasks.test]
+description = "cargo test --all-targets --locked"
+run = "cargo test --all-targets --locked"
+
+[tasks.build]
+description = "cargo build --all-targets --locked"
+run = "cargo build --all-targets --locked"
+
+[tasks.doc]
+description = "cargo doc --no-deps --all-features (RUSTDOCFLAGS=-D warnings)"
+env = { RUSTDOCFLAGS = "-D warnings" }
+run = "cargo doc --no-deps --all-features"
+
+[tasks.ci]
+description = "Full CI gate"
+depends = ["lint", "test", "build", "doc"]

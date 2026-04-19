@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mise run init)",
+      "Bash(mise run lint)",
+      "Bash(mise run format)",
+      "Bash(mise run test)",
+      "Bash(mise run build)",
+      "Bash(mise run doc)",
+      "Bash(mise run ci)",
+      "Bash(mise run init *)",
+      "Bash(mise run lint *)",
+      "Bash(mise run format *)",
+      "Bash(mise run test *)",
+      "Bash(mise run build *)",
+      "Bash(mise run doc *)",
+      "Bash(mise run ci *)"
+    ]
+  }
+}

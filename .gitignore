@@ -32,3 +32,6 @@ rls/
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# Claude local settings
+.claude/settings.local.json

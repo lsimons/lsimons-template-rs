@@ -3,6 +3,12 @@
 **/*.rs.bk
 Cargo.lock.bak
 
+# Python bytecode from scripts/init.py. This is a Rust repo, but it
+# ships a Python helper, and anything that imports it rather than
+# running it as a script leaves bytecode behind.
+__pycache__/
+*.py[cod]
+
 # Coverage
 /coverage/
 *.profraw

@@ -43,7 +43,7 @@ an individual is officially representing the community in public spaces.
 ## Enforcement
 
 Instances of abusive, harassing, or otherwise unacceptable behavior may be
-reported to @lsimons. Complaints will be reviewed and investigated.
+reported to the project owner. Complaints will be reviewed and investigated.
 
 ## Enforcement Guidelines
 

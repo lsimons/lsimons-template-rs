@@ -83,7 +83,6 @@ lsimons-template-rs/
 ├── CODE_OF_CONDUCT.md
 ├── CONTRIBUTING.md
 ├── LICENSE                   # Apache-2.0
-├── SECURITY.md               # Vulnerability reporting route
 ├── Cargo.toml                # Package manifest
 ├── Cargo.lock                # Committed; never gitignore this
 ├── rustfmt.toml              # Formatter config
@@ -137,4 +136,12 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md). AI agents see
 
 ## Security
 
-See [SECURITY.md](./SECURITY.md).
+Report vulnerabilities privately through the **Security** tab of this
+repository on GitHub, not in a public issue.
+
+This template deliberately ships no `SECURITY.md`. A security policy has
+to name a reporting route, and a route that is right for one project is
+wrong — and possibly harmful — for every project copied from it: the
+copy would send its reporters to this author's inbox, and nobody would
+notice. Decide yours per project; `/setup` (step 5 above) enables the
+reporting channel on the actual repo.

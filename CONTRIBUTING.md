@@ -6,7 +6,7 @@ Any contributions you make are governed by our [License](LICENSE).
 
 Please follow our [Code of Conduct](CODE_OF_CONDUCT.md) to keep our community approachable and respectable.
 
-To report a security problem, follow [SECURITY.md](SECURITY.md) instead of opening a public issue.
+Do not open a public issue for a security problem. Report it privately through the **Security** tab of this repository on GitHub.
 
 ## Working on a change
 

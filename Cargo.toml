@@ -17,6 +17,12 @@ repository = "https://github.com/lsimons/lsimons-template-rs"
 # a declaration that this crate is built with the pinned toolchain, so
 # cargo reports a clear error rather than a confusing one.
 rust-version = "1.97"
+# Publishing is blocked so a derived project that has not yet run
+# `mise run init` cannot `cargo publish` a crate literally called
+# `lsimons-template`. crates.io names are permanent and cannot be
+# reclaimed, so the mistake is unrecoverable. Delete this line when you
+# actually intend to publish.
+publish = false
 
 [lib]
 # Library code lives in src/lib.rs. The binary target below depends on it.

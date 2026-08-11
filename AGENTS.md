@@ -54,8 +54,10 @@ docs/spec/                Feature specifications
 - Edition 2024. The toolchain is pinned exactly in `.mise.toml`, and
   `rust-version` in `Cargo.toml` mirrors it — bump both together.
 - `cargo clippy -- -D warnings` must be clean (warn on `all` +
-  `pedantic`). `RUSTFLAGS=-D warnings` is set repo-wide, so a warning
-  anywhere fails the build.
+  `pedantic`). `RUSTFLAGS=-D warnings` is set by `.mise.toml` and by the
+  CI workflow, so every `warn` level in `Cargo.toml` is in practice a
+  `deny` there. A bare `cargo build` in a shell without mise active does
+  not get this, so a warning can look harmless locally and still fail CI.
 - Code must be `cargo fmt`-clean; do not hand-format around rustfmt.
 - No `unsafe` (`unsafe_code = "forbid"` in `Cargo.toml`).
 - Library and CLI share no implicit state; business logic belongs in
@@ -74,9 +76,9 @@ docs/spec/                Feature specifications
 
 **Supply chain:**
 
-- `Cargo.lock` is committed and must stay in the tree. Every task builds
-  with `--locked`, so a task that wants to change the lock is a signal,
-  not a nuisance.
+- `Cargo.lock` is committed and must stay in the tree. Every cargo task
+  in `.mise.toml` (`build`, `test`, `lint`, `doc`) passes `--locked`, so
+  a task that wants to change the lock is a signal, not a nuisance.
 - Dependencies stay on caret ranges in `Cargo.toml`. `Cargo.lock` is the
   pin — it fixes an exact version and checksum for each crate — and
   dependabot's `cargo` ecosystem updates the lock directly. Hard-pinning

@@ -65,9 +65,9 @@ description = "cargo build --all-targets --locked"
 run = "cargo build --all-targets --locked"
 
 [tasks.doc]
-description = "cargo doc --no-deps --all-features (RUSTDOCFLAGS=-D warnings)"
+description = "cargo doc --no-deps --all-features --locked (RUSTDOCFLAGS=-D warnings)"
 env = { RUSTDOCFLAGS = "-D warnings" }
-run = "cargo doc --no-deps --all-features"
+run = "cargo doc --no-deps --all-features --locked"
 
 [tasks.ci]
 description = "Full CI gate"
@@ -92,6 +92,14 @@ run = "cargo-deny --all-features check advisories sources"
 # unverified result, not a pass — so refuse to run rather than exit 0 on
 # a weaker check than the name promises. The gate is at the top, so the
 # task is all-or-nothing rather than partly-run.
+#
+# zizmor's collect mode is left at its default, which already picks up
+# .github/dependabot.yml as well as the workflows; the only thing
+# --collect=all adds is ignoring .gitignore, which invites auditing
+# vendored or generated trees. --strict-collection is passed because a
+# dependabot config that fails schema validation should be an error, not
+# a warning; the CI action exposes no input for it, so this task is
+# marginally stricter than the zizmor job.
 [tasks.audit]
 description = "zizmor audit of workflows + cargo-deny audit of Cargo.lock"
 run = """
@@ -103,7 +111,11 @@ if [ -z "$GH_TOKEN" ]; then
   exit 1
 fi
 export GH_TOKEN
-zizmor --collect=all --strict-collection .
+# zizmor also reads GITHUB_TOKEN, and an exported-but-empty GITHUB_TOKEN
+# (common in half-configured shells) makes it die on `invalid value ''`
+# even though the gate above passed. GH_TOKEN is the one we vouched for.
+unset GITHUB_TOKEN
+zizmor --strict-collection .
 mise run deny
 """
 

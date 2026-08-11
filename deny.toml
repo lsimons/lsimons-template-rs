@@ -4,12 +4,22 @@
 # network access to fetch the RustSec advisory database, which is why
 # this is not part of `mise run ci`.
 #
-# Only `advisories` and `sources` are enabled. `licenses` and `bans` are
-# deliberately left off: both need a project-specific allowlist, and
-# inheriting someone else's allowlist produces spurious failures in a
-# derived project on its first real dependency. Turn
-# them on per project by adding the relevant sections here and adding
-# the check names to the `cargo-deny` invocations in `.mise.toml` and
+# Only `advisories` and `sources` are configured here, and `mise run deny`
+# runs only those two.
+#
+# Run it with `mise run deny`, not a bare `cargo deny check`. A bare
+# `cargo deny check` runs all four checks, including `licenses`, which
+# has no allowlist in this file and so fails immediately with
+# `licenses FAILED`. That is a confusing first encounter, and it is the
+# config's fault rather than yours.
+#
+# `licenses` and `bans` are deliberately left off. Both need a
+# project-specific allowlist, and inheriting someone else's produces
+# spurious failures in a derived project on its first real dependency —
+# for `licenses` the allowlist is also a legal statement that nobody in
+# the derived project ever agreed to. Turn them on per project by adding
+# the relevant sections here and adding the check names to the
+# `cargo-deny` invocations in `.mise.toml` and
 # `.github/workflows/ci.yml`.
 
 [advisories]
@@ -17,8 +27,17 @@
 # crate whose upstream has been yanked from crates.io.
 db-urls = ["https://github.com/rustsec/advisory-db"]
 yanked = "deny"
-# Unmaintained crates in the transitive graph are a real risk but not a
-# vulnerability; surface them without failing the build.
+# `unmaintained` is a *scope selector*, not a lint level — the accepted
+# values are "all", "workspace", "transitive" and "none". Whatever is in
+# scope FAILS the check; it does not warn. So this line means: an
+# unmaintained direct dependency turns the build red, an unmaintained
+# transitive one does not.
+#
+# "workspace" is also cargo-deny's own default, so this line changes
+# nothing today. It is written out anyway so the policy is visible and
+# so a future change to the tool's default cannot alter this repo's
+# behaviour silently. Use "none" if you want unmaintained crates
+# ignored entirely; there is no value that merely warns.
 unmaintained = "workspace"
 ignore = []
 

@@ -24,6 +24,8 @@ jobs:
   lint-and-test:
     name: Lint, build and test
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
 
     steps:
       - name: Checkout code
@@ -69,14 +71,21 @@ jobs:
         uses: zizmorcore/zizmor-action@3dc1ecc9bcb9e94e9b2c709687979e1298497054 # v0.6.2
         with:
           advanced-security: false
-          # The action's own defaults are version "latest" and collect
-          # "default". Pin the version so a zizmor release cannot turn CI
-          # red on its own, and set collect: all so .github/dependabot.yml
-          # is audited here too — with the default it was audited only by
-          # `mise run audit` locally. Both must match `mise run audit` for
-          # that task to be a real local mirror; bump them together.
+          # The action defaults to version "latest". Pin it so a zizmor
+          # release cannot turn CI red on its own, and keep it equal to
+          # the `zizmor` pin in .mise.toml — bump them together.
+          #
+          # `collect` is deliberately left at the action's default.
+          # zizmor's "default" already collects .github/dependabot.yml;
+          # the only thing "all" adds is ignoring .gitignore, which would
+          # let a deliberately-gitignored scratch workflow gate CI.
+          #
+          # This job is close to `mise run audit` but not identical: that
+          # task also passes --strict-collection, which turns a schema
+          # error in a collected file into a failure rather than a
+          # warning. The action exposes no input for it, so the local
+          # task is the stricter of the two.
           version: "1.29.0"
-          collect: all
 
   cargo-deny:
     name: Cargo-deny (dependency audit)
@@ -99,5 +108,11 @@ jobs:
       # on a new RustSec advisory against an unchanged tree, so it must
       # be able to go red without implying the code broke. Runs the same
       # `deny` task `mise run audit` does.
+      #
+      # This job does need the full toolchain that mise-action installs,
+      # despite running only one prebuilt binary: cargo-deny shells out
+      # to `cargo metadata` to build the crate graph, and without cargo
+      # on PATH it fails with "failed to run cargo". Do not try to slim
+      # this job down to just the cargo-deny tool.
       - name: Audit dependencies (cargo-deny)
         run: mise run deny

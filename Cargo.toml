@@ -6,6 +6,15 @@ description = "Brief project description"
 authors = ["lsimons"]
 license-file = "LICENSE.md"
 readme = "README.md"
+# `scripts/init.py` rewrites this along with the crate name, which lands
+# on the right URL only if the repo follows the `lsimons-<name>-rs`
+# convention. Check it after `mise run init`.
+repository = "https://github.com/lsimons/lsimons-template-rs"
+# Matches the `rust` pin in .mise.toml; bump them together. This is not a
+# tested-back-to MSRV — nothing builds against an older toolchain — it is
+# a declaration that this crate is built with the pinned toolchain, so
+# cargo reports a clear error rather than a confusing one.
+rust-version = "1.97"
 
 [lib]
 # Library code lives in src/lib.rs. The binary target below depends on it.

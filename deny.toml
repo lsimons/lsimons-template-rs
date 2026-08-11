@@ -1,0 +1,31 @@
+# cargo-deny: https://embarkstudios.github.io/cargo-deny/
+#
+# Run by `mise run audit` and by the `cargo-deny` job in CI. Both need
+# network access to fetch the RustSec advisory database, which is why
+# this is not part of `mise run ci`.
+#
+# Only `advisories` and `sources` are enabled. `licenses` and `bans` are
+# deliberately left off: both need a project-specific allowlist, and a
+# template that ships someone else's allowlist produces spurious
+# failures in every derived project on its first real dependency. Turn
+# them on per project by adding the relevant sections here and adding
+# the check names to the `cargo-deny` invocations in `.mise.toml` and
+# `.github/workflows/ci.yml`.
+
+[advisories]
+# Fail on any crate in Cargo.lock with a RustSec advisory, and on any
+# crate whose upstream has been yanked from crates.io.
+db-urls = ["https://github.com/rustsec/advisory-db"]
+yanked = "deny"
+# Unmaintained crates in the transitive graph are a real risk but not a
+# vulnerability; surface them without failing the build.
+unmaintained = "workspace"
+ignore = []
+
+[sources]
+# Every dependency must come from crates.io. This is what stops a git
+# or path dependency — which has no lockfile hash and no registry
+# provenance — from entering the graph unnoticed.
+unknown-registry = "deny"
+unknown-git = "deny"
+allow-registry = ["https://github.com/rust-lang/crates.io-index"]

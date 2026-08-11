@@ -1,11 +1,39 @@
 # mise: https://mise.jdx.dev/
 #
-# `mise install` installs the Rust toolchain; `mise run <task>` wraps
-# cargo commands. Cargo.toml's `rust-version` remains the MSRV
-# authority.
+# `mise install` installs everything under [tools]; `mise run <task>`
+# wraps cargo and the audit tools. Cargo.toml's `rust-version` remains
+# the MSRV authority, and is kept in step with the `rust` pin below.
 
+# Every tool is pinned to an exact version, deliberately and without
+# exception — including the Rust toolchain. This is a supply-chain rule,
+# not a stability one: an upstream compromise must never be
+# auto-downloaded. A blanket "pin everything, update mechanically"
+# policy is far easier to review than a per-dependency judgement about
+# which upstreams are trustworthy enough to float.
+#
+# Note this is *tools*, not dependencies. The crates in Cargo.toml stay
+# on caret ranges because Cargo.lock already pins each one to an exact
+# version and checksum, and `--locked` makes every task build from the
+# lock. Hard-pinning them in Cargo.toml would only fight dependabot.
+#
+# The cost is that nothing here is covered by dependabot, so these go
+# stale silently. Refresh them deliberately with `mise up`, and read the
+# diff. Bump `rust-version` in Cargo.toml along with `rust`.
 [tools]
-rust = "latest"
+rust = "1.97.1"
+# Used by `mise run audit`; must match `version:` in the workflow's
+# zizmor job. Bump them together.
+zizmor = "1.29.0"
+# Used by `mise run lint`. actionlint shells out to shellcheck for the
+# `run:` blocks in workflows, and silently skips that half if shellcheck
+# is missing, so it is pinned here too rather than left to the host.
+actionlint = "1.7.12"
+shellcheck = "0.11.0"
+# Used by `mise run audit` and by the `cargo-deny` CI job: checks
+# Cargo.lock against the RustSec advisory database and enforces the
+# source policy in deny.toml. Not in mise's registry under a short name,
+# hence the explicit aqua backend.
+"aqua:EmbarkStudios/cargo-deny" = "0.20.2"
 
 [env]
 CARGO_TERM_COLOR = "always"
@@ -17,10 +45,11 @@ description = "Rename this template to a new project (see scripts/init.py)"
 run = "python3 scripts/init.py"
 
 [tasks.lint]
-description = "cargo fmt --check + clippy -D warnings"
+description = "cargo fmt --check + clippy -D warnings + actionlint"
 run = [
     "cargo fmt --all --check",
-    "cargo clippy --all-targets --all-features -- -D warnings",
+    "cargo clippy --all-targets --all-features --locked -- -D warnings",
+    "actionlint",
 ]
 
 [tasks.format]
@@ -43,6 +72,30 @@ run = "cargo doc --no-deps --all-features"
 [tasks.ci]
 description = "Full CI gate"
 depends = ["lint", "test", "build", "doc"]
+
+# Local mirror of the CI audit jobs, using the mise-pinned zizmor and
+# cargo-deny. Not part of `ci` because both need network access: zizmor
+# for its online audits, cargo-deny to fetch the advisory database.
+#
+# Without a token zizmor silently falls back to offline and skips the
+# `impostor-commit` and `known-vulnerable-actions` audits, which is an
+# unverified result, not a pass — so refuse to run rather than exit 0 on
+# a weaker check than the name promises. The gate is at the top, so the
+# task is all-or-nothing rather than partly-run.
+[tasks.audit]
+description = "zizmor audit of workflows + cargo-deny audit of Cargo.lock"
+run = """
+set -e
+GH_TOKEN=$(gh auth token 2>/dev/null) || true
+if [ -z "$GH_TOKEN" ]; then
+  echo "No GitHub token: run \\`gh auth login\\`. Refusing to run a" >&2
+  echo "partial audit — the online audits would be silently skipped." >&2
+  exit 1
+fi
+export GH_TOKEN
+zizmor --collect=all --strict-collection .
+cargo-deny --all-features check advisories sources
+"""
 
 [tasks.ci-watch]
 description = "Watch GitHub Actions CI for the current branch; exits non-zero on failure"

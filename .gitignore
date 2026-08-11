@@ -33,5 +33,13 @@ rls/
 ehthumbs.db
 Thumbs.db
 
-# Claude local settings
+# mise local overrides (the committed .mise.toml is the shared config)
+.mise.local.toml
+mise.local.toml
+.mise/
+
+# Claude
+# `.claude/` itself is tracked on purpose — settings.json is shared
+# config. Only per-user state and scratch worktrees are ignored.
 .claude/settings.local.json
+.claude/worktrees

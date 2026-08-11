@@ -1,0 +1,22 @@
+# https://editorconfig.org/
+# Keeps editors that are not running rustfmt in line with rustfmt's
+# output (see rustfmt.toml: 4-space indent, LF, max_width 100).
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 4
+
+# TOML is deliberately not listed here: Cargo.toml, .mise.toml and
+# deny.toml are all committed with 4-space indentation where they indent
+# at all, so the [*] default is the one that matches what is in the tree.
+[*.{yml,yaml,json,md}]
+indent_size = 2
+
+[*.md]
+# Two trailing spaces are a hard line break in Markdown.
+trim_trailing_whitespace = false

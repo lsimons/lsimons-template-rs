@@ -86,7 +86,7 @@ navigation trivial. Convert to a Cargo workspace only when you need one of:
 
 ## License
 
-See [LICENSE.md](./LICENSE.md).
+See [LICENSE](./LICENSE) (Apache-2.0).
 
 ## Contributing
 

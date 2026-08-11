@@ -4,7 +4,9 @@ version = "0.1.0"
 edition = "2024"
 description = "Brief project description"
 authors = ["lsimons"]
-license-file = "LICENSE.md"
+# An SPDX expression rather than `license-file`: it is machine-readable,
+# it is what crates.io indexes, and the LICENSE file is packaged anyway.
+license = "Apache-2.0"
 readme = "README.md"
 # `scripts/init.py` rewrites this along with the crate name, which lands
 # on the right URL only if the repo follows the `lsimons-<name>-rs`

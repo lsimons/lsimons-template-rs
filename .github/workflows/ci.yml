@@ -10,12 +10,19 @@ on:
 permissions:
   contents: read
 
+# Supersede in-flight runs for the same branch/PR; never cancel main, so
+# the main-branch record of CI stays complete.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
 env:
   CARGO_TERM_COLOR: always
   RUSTFLAGS: -D warnings
 
 jobs:
   lint-and-test:
+    name: Lint, build and test
     runs-on: ubuntu-latest
 
     steps:
@@ -36,7 +43,7 @@ jobs:
       - name: Cache cargo registry and target
         uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
 
-      - name: Lint (fmt + clippy)
+      - name: Lint (fmt + clippy + actionlint)
         run: mise run lint
 
       - name: Build
@@ -62,3 +69,35 @@ jobs:
         uses: zizmorcore/zizmor-action@3dc1ecc9bcb9e94e9b2c709687979e1298497054 # v0.6.2
         with:
           advanced-security: false
+          # The action's own defaults are version "latest" and collect
+          # "default". Pin the version so a zizmor release cannot turn CI
+          # red on its own, and set collect: all so .github/dependabot.yml
+          # is audited here too — with the default it was audited only by
+          # `mise run audit` locally. Both must match `mise run audit` for
+          # that task to be a real local mirror; bump them together.
+          version: "1.29.0"
+          collect: all
+
+  cargo-deny:
+    name: Cargo-deny (dependency audit)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up mise
+        uses: jdx/mise-action@7e36c90d9ab29c415a2384db3006f3ec8a8cc654 # v4.2.4
+        with:
+          install: true
+          cache: true
+
+      # Its own job rather than a step in lint-and-test: this one fails
+      # on a new RustSec advisory against an unchanged tree, so it must
+      # be able to go red without implying the code broke. Runs the same
+      # `deny` task `mise run audit` does.
+      - name: Audit dependencies (cargo-deny)
+        run: mise run deny

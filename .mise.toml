@@ -73,6 +73,16 @@ run = "cargo doc --no-deps --all-features"
 description = "Full CI gate"
 depends = ["lint", "test", "build", "doc"]
 
+# Checks Cargo.lock against the RustSec advisory database and enforces
+# deny.toml's source policy. Its own task rather than being inlined into
+# `audit`, because the `cargo-deny` CI job runs exactly this and nothing
+# else — so there is one definition of what the check is, not two that
+# can drift. Needs network to fetch the advisory database, which is why
+# it is not in `ci`.
+[tasks.deny]
+description = "cargo-deny: RustSec advisories + source policy against Cargo.lock"
+run = "cargo-deny --all-features check advisories sources"
+
 # Local mirror of the CI audit jobs, using the mise-pinned zizmor and
 # cargo-deny. Not part of `ci` because both need network access: zizmor
 # for its online audits, cargo-deny to fetch the advisory database.
@@ -94,7 +104,7 @@ if [ -z "$GH_TOKEN" ]; then
 fi
 export GH_TOKEN
 zizmor --collect=all --strict-collection .
-cargo-deny --all-features check advisories sources
+mise run deny
 """
 
 [tasks.ci-watch]

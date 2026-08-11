@@ -41,7 +41,7 @@ RUSTFLAGS = "-D warnings"
 _.file = { path = ".env", optional = true }
 
 [tasks.init]
-description = "Rename this template to a new project (see scripts/init.py)"
+description = "Rename the placeholder crate name to your project name (see scripts/init.py)"
 run = "python3 scripts/init.py"
 
 [tasks.lint]

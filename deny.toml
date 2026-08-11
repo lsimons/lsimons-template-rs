@@ -5,9 +5,9 @@
 # this is not part of `mise run ci`.
 #
 # Only `advisories` and `sources` are enabled. `licenses` and `bans` are
-# deliberately left off: both need a project-specific allowlist, and a
-# template that ships someone else's allowlist produces spurious
-# failures in every derived project on its first real dependency. Turn
+# deliberately left off: both need a project-specific allowlist, and
+# inheriting someone else's allowlist produces spurious failures in a
+# derived project on its first real dependency. Turn
 # them on per project by adding the relevant sections here and adding
 # the check names to the `cargo-deny` invocations in `.mise.toml` and
 # `.github/workflows/ci.yml`.

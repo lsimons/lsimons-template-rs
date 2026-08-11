@@ -9,6 +9,8 @@
       "Bash(mise run doc)",
       "Bash(mise run ci)",
       "Bash(mise run ci-watch)",
+      "Bash(mise run deny)",
+      "Bash(mise run audit)",
       "Bash(mise run init *)",
       "Bash(mise run lint *)",
       "Bash(mise run format *)",
@@ -16,7 +18,9 @@
       "Bash(mise run build *)",
       "Bash(mise run doc *)",
       "Bash(mise run ci *)",
-      "Bash(mise run ci-watch *)"
+      "Bash(mise run ci-watch *)",
+      "Bash(mise run deny *)",
+      "Bash(mise run audit *)"
     ]
   }
 }

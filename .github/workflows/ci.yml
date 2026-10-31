@@ -85,7 +85,7 @@ jobs:
           # error in a collected file into a failure rather than a
           # warning. The action exposes no input for it, so the local
           # task is the stricter of the two.
-          version: "1.30.1"
+          version: "1.31.1"
 
   cargo-deny:
     name: Cargo-deny (dependency audit)

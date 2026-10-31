@@ -16,10 +16,10 @@ lockfile = true
 # policy is far easier to review than a per-dependency judgement about
 # which upstreams are trustworthy enough to float.
 #
-# Note this is *tools*, not dependencies. The crates in Cargo.toml stay
-# on caret ranges because Cargo.lock already pins each one to an exact
-# version and checksum, and `--locked` makes every task build from the
-# lock. Hard-pinning them in Cargo.toml would only fight dependabot.
+# The crates in Cargo.toml follow the same rule: they are exact `=`
+# pins too, Cargo.lock pins the transitive graph with checksums, and
+# `--locked` makes every task build from the lock. Those are covered by
+# dependabot, which bumps the exact pin.
 #
 # The cost is that nothing here is covered by dependabot, so these go
 # stale silently. Refresh them deliberately with `mise up`, and read the

@@ -77,8 +77,8 @@ docs/spec/                Feature specifications
 
 - `Cargo.lock` is committed and must stay in the tree. Every cargo task
   passes `--locked`, so a task that wants to relock is a signal.
-- Dependencies stay on caret ranges — `Cargo.lock` is the pin, and
-  dependabot updates it directly.
+- Dependencies in `Cargo.toml` are exact-pinned (`=x.y.z`); `Cargo.lock`
+  pins the transitive graph. Dependabot bumps the exact pin.
 - New dependencies must come from crates.io; `deny.toml`'s `sources`
   check rejects git and path dependencies.
 - `mise run deny` must be clean. `mise run audit` runs it through

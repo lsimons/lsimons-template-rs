@@ -56,8 +56,8 @@ testable in isolation and reusable by other consumers.
   `Cargo.lock` against the RustSec advisory database and restricts
   dependency sources to crates.io — see `deny.toml`
 - **Dependabot** for `cargo` and `github-actions`, weekly, with a 7-day
-  cooldown. The `cargo` ecosystem updates `Cargo.lock` directly, so
-  dependencies stay on caret ranges in `Cargo.toml`
+  cooldown. Dependencies in `Cargo.toml` are exact `=` pins, and
+  Dependabot bumps the pin together with `Cargo.lock`
 - **`.mise.toml`** pins every tool to an exact version — the Rust
   toolchain included — and defines every repo task
 - **`.editorconfig`** so editors that are not running rustfmt still

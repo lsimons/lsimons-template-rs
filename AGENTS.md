@@ -34,11 +34,11 @@ Run the CLI directly with `cargo run -- <args>`.
 
 ```
 .github/workflows/ci.yml  CI: lint/build/test/doc + zizmor + cargo-deny
-.github/dependabot.yml    Weekly cargo + github-actions updates
 .mise.toml                Pinned toolchain + every repo task
 deny.toml                 cargo-deny advisory and source policy
 Cargo.toml                Package manifest, lints, release profile
 Cargo.lock                Committed; never gitignore this
+renovate.json             Renovate: cargo, actions and mise tool updates (shared preset)
 rustfmt.toml              Formatter config
 scripts/init.py           Rename-to-your-project helper (`mise run init`)
 src/lib.rs                Library: put testable core logic here
@@ -78,15 +78,15 @@ docs/spec/                Feature specifications
 - `Cargo.lock` is committed and must stay in the tree. Every cargo task
   passes `--locked`, so a task that wants to relock is a signal.
 - Dependencies in `Cargo.toml` are exact-pinned (`=x.y.z`); `Cargo.lock`
-  pins the transitive graph. Dependabot bumps the exact pin.
+  pins the transitive graph. Renovate bumps the exact pin.
 - New dependencies must come from crates.io; `deny.toml`'s `sources`
   check rejects git and path dependencies.
 - `mise run deny` must be clean. `mise run audit` runs it through
   `depends`, so it happens before the GitHub-token gate — cargo-deny
   needs no token.
 - Pin GitHub Actions to full-length commit SHAs; `zizmor` enforces it.
-- Every `.mise.toml` tool is exact-pinned and invisible to dependabot;
-  refresh with `mise up` and read the diff.
+- Every `.mise.toml` tool is exact-pinned. Renovate proposes the bumps
+  (mise tools, crates, actions); read the diff.
 
 ## Commit Message Convention
 

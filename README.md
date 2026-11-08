@@ -28,10 +28,14 @@ testable in isolation and reusable by other consumers.
    `Cargo.toml`'s `description` and `repository`.
 4. Replace `src/lib.rs` and `src/main.rs` with real code.
 5. Run `/setup` in your agent of choice. Repository settings — issue
-   labels, private vulnerability reporting, Dependabot alerts and
-   security updates — are GitHub state rather than files, so
-   `Use this template` does not copy them and nothing in this repo can
-   create them. `/setup` configures them against the new repo directly.
+   labels, private vulnerability reporting, Dependabot alerts — are
+   GitHub state rather than files, so `Use this template` does not copy
+   them and nothing in this repo can create them. `/setup` configures
+   them against the new repo directly. Keep Dependabot *alerts* on
+   (Renovate reads them) but leave Dependabot security updates off:
+   update PRs come from Renovate, via the inherited `renovate.json` and
+   the `lsimons-renovate` GitHub App, which is already installed on
+   every lsimons/ repo.
 
 ## Included Configuration
 
@@ -55,9 +59,11 @@ testable in isolation and reusable by other consumers.
 - **[cargo-deny](https://embarkstudios.github.io/cargo-deny/)** checks
   `Cargo.lock` against the RustSec advisory database and restricts
   dependency sources to crates.io — see `deny.toml`
-- **Dependabot** for `cargo` and `github-actions`, weekly, with a 7-day
-  cooldown. Dependencies in `Cargo.toml` are exact `=` pins, and
-  Dependabot bumps the pin together with `Cargo.lock`
+- **Renovate** (`renovate.json`, extending the shared
+  [lsimons/.github preset](https://github.com/lsimons/.github#renovate))
+  for `cargo`, GitHub Actions and the `.mise.toml` tools, with a 7-day
+  minimum release age. Dependencies in `Cargo.toml` are exact `=` pins,
+  and Renovate bumps the pin together with `Cargo.lock`
 - **`.mise.toml`** pins every tool to an exact version — the Rust
   toolchain included — and defines every repo task
 - **`.editorconfig`** so editors that are not running rustfmt still
@@ -68,7 +74,6 @@ testable in isolation and reusable by other consumers.
 ```
 lsimons-template-rs/
 ├── .github/workflows/ci.yml  # CI: lint/build/test/doc + zizmor + cargo-deny
-├── .github/dependabot.yml    # Weekly cargo + github-actions updates
 ├── .editorconfig             # Editor defaults
 ├── .mise.toml                # Toolchain pin + every repo task
 ├── deny.toml                 # cargo-deny advisory and source policy
@@ -86,6 +91,7 @@ lsimons-template-rs/
 ├── LICENSE                   # Apache-2.0
 ├── Cargo.toml                # Package manifest
 ├── Cargo.lock                # Committed; never gitignore this
+├── renovate.json             # Dependency updates (shared preset)
 ├── rustfmt.toml              # Formatter config
 └── README.md
 ```

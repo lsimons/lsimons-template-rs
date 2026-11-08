@@ -18,16 +18,18 @@ lockfile = true
 #
 # The crates in Cargo.toml follow the same rule: they are exact `=`
 # pins too, Cargo.lock pins the transitive graph with checksums, and
-# `--locked` makes every task build from the lock. Those are covered by
-# dependabot, which bumps the exact pin.
+# `--locked` makes every task build from the lock. Renovate's cargo
+# manager bumps the exact pin together with Cargo.lock.
 #
-# The cost is that nothing here is covered by dependabot, so these go
-# stale silently. Refresh them deliberately with `mise up`, and read the
-# diff. Pinning rust here is a supply-chain pin, not an MSRV.
+# The tools here are covered by Renovate's mise manager, which proposes
+# bumps for these pins and mise.lock (after its 7-day minimumReleaseAge,
+# matching `minimum_release_age` above), so read the diff of those PRs
+# like any other. Pinning rust here is a supply-chain pin, not an MSRV.
 [tools]
 rust = "1.99.1"
 # Used by `mise run audit`; must match `version:` in the workflow's
-# zizmor job. Bump them together.
+# zizmor job. Renovate bumps both (mise manager here, github-actions
+# manager there); check that they still match when reviewing its PR.
 zizmor = "1.31.1"
 # Used by `mise run lint`. actionlint shells out to shellcheck for the
 # `run:` blocks in workflows, and silently skips that half if shellcheck
@@ -106,12 +108,12 @@ run = "cargo-deny --all-features check advisories sources"
 # either way: it runs `deny` in its own job.
 #
 # zizmor's collect mode is left at its default, which already picks up
-# .github/dependabot.yml as well as the workflows; the only thing
-# --collect=all adds is ignoring .gitignore, which invites auditing
-# vendored or generated trees. --strict-collection is passed because a
-# dependabot config that fails schema validation should be an error, not
-# a warning; the CI action exposes no input for it, so this task is
-# marginally stricter than the zizmor job.
+# the workflows; the only thing --collect=all adds is ignoring
+# .gitignore, which invites auditing vendored or generated trees.
+# --strict-collection is passed because a collected file that fails
+# schema validation should be an error, not a warning; the CI action
+# exposes no input for it, so this task is marginally stricter than the
+# zizmor job.
 [tasks.audit]
 description = "zizmor audit of workflows + cargo-deny audit of Cargo.lock"
 depends = ["deny"]

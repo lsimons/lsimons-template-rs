@@ -73,11 +73,11 @@ jobs:
           advanced-security: false
           # The action defaults to version "latest". Pin it so a zizmor
           # release cannot turn CI red on its own, and keep it equal to
-          # the `zizmor` pin in .mise.toml — bump them together.
+          # the `zizmor` pin in .mise.toml — Renovate bumps both; check
+          # they still match in its PR.
           #
           # `collect` is deliberately left at the action's default.
-          # zizmor's "default" already collects .github/dependabot.yml;
-          # the only thing "all" adds is ignoring .gitignore, which would
+          # The only thing "all" adds is ignoring .gitignore, which would
           # let a deliberately-gitignored scratch workflow gate CI.
           #
           # This job is close to `mise run audit` but not identical: that

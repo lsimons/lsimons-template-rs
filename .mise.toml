@@ -30,7 +30,7 @@ rust = "1.99.1"
 # Used by `mise run audit`; must match `version:` in the workflow's
 # zizmor job. Renovate bumps both (mise manager here, github-actions
 # manager there); check that they still match when reviewing its PR.
-zizmor = "1.31.1"
+zizmor = "1.32.0"
 # Used by `mise run lint`. actionlint shells out to shellcheck for the
 # `run:` blocks in workflows, and silently skips that half if shellcheck
 # is missing, so it is pinned here too rather than left to the host.

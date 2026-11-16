@@ -34,7 +34,7 @@ jobs:
           persist-credentials: false
 
       - name: Set up mise
-        uses: jdx/mise-action@6612f0ef07ed2a736cd1e00a94a065522dd41195 # v5.2.5
+        uses: jdx/mise-action@b44d12e7d0d8ee7461bb893e1b1993500433185b # v5.2.7
         with:
           install: true
           cache: true
@@ -68,7 +68,7 @@ jobs:
         with:
           persist-credentials: false
       - name: Audit GitHub Actions workflows (zizmor)
-        uses: zizmorcore/zizmor-action@53290badfa369cb0bf7ad16342cb62c2fa47ac7b # v0.8.0
+        uses: zizmorcore/zizmor-action@45d7276c9ca790aabd705e31ca99c6185c3e76dd # v0.8.1
         with:
           advanced-security: false
           # The action defaults to version "latest". Pin it so a zizmor
@@ -85,7 +85,7 @@ jobs:
           # error in a collected file into a failure rather than a
           # warning. The action exposes no input for it, so the local
           # task is the stricter of the two.
-          version: "1.31.1"
+          version: "1.32.0"
 
   cargo-deny:
     name: Cargo-deny (dependency audit)
@@ -99,7 +99,7 @@ jobs:
           persist-credentials: false
 
       - name: Set up mise
-        uses: jdx/mise-action@6612f0ef07ed2a736cd1e00a94a065522dd41195 # v5.2.5
+        uses: jdx/mise-action@b44d12e7d0d8ee7461bb893e1b1993500433185b # v5.2.7
         with:
           install: true
           cache: true

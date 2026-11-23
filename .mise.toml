@@ -26,7 +26,7 @@ lockfile = true
 # matching `minimum_release_age` above), so read the diff of those PRs
 # like any other. Pinning rust here is a supply-chain pin, not an MSRV.
 [tools]
-rust = "1.99.1"
+rust = "1.100.0"
 # Used by `mise run audit`; must match `version:` in the workflow's
 # zizmor job. Renovate bumps both (mise manager here, github-actions
 # manager there); check that they still match when reviewing its PR.
